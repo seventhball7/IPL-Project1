@@ -4,11 +4,11 @@ function matches(matchdata) {
   const teamMatches = {};
   for (let i in matchdata) {
     let year = matchdata[i].season;
-    if (teamMatches[year] == null) {
-      teamMatches[year] = 1;
+    if (year in teamMatches) {
+      teamMatches[year]+= 1;
     }
     else {
-      teamMatches[year] += 1;
+      teamMatches[year] = 1;
     }
   }
  return teamMatches;
@@ -19,22 +19,26 @@ function matches(matchdata) {
 function matchesWon(matchdata) {
   let matchesWon = {};
   let perTeamWon = {};
-  for (let i = 0; i < matchdata.length; i += 1) {
-    if (matchdata[i].season in matchesWon) {
-      if (matchdata[i].winner in perTeamWon) {
-        perTeamWon[matchdata[i].winner] += 1;
+  let year;
+  for (let i in matchdata) {
+     year=matchdata[i].season;
+    if(year in matchesWon){
+      let win=matchdata[i].winner;
+      if(win in perTeamWon){
+      perTeamWon[win]+=1;
       }
-      else {
-        perTeamWon[matchdata[i].winner] = 1;
+      else{
+        perTeamWon[win]=1;
       }
-      matchesWon[matchdata[i].season] = perTeamWon;
+      matchesWon[year]=perTeamWon;
     }
-    else {
-       perTeamWon={};
-      matchesWon[matchdata[i].season] = perTeamWon;
+    else{
+      perTeamWon={};
+      matchesWon[year]=perTeamWon;
     }
+  
   }
-  return matchesWon;
+ return matchesWon;
 
 }
 
@@ -68,9 +72,6 @@ function extraRuns(matchdata, deliverydata) {
   return teams;
 }
 
-
-
-
 // problem 4
 
 function economicalBowlers(deliverydata) {
@@ -78,7 +79,7 @@ function economicalBowlers(deliverydata) {
   //let result = [];
   let meconomy={};
   let bowlerName;
-  //let arr=[];
+  let result=[];
   for (let i in deliverydata) {
     bowlerName = deliverydata[i].bowler;
     if (eBowler[bowlerName] == undefined) {
@@ -97,12 +98,17 @@ function economicalBowlers(deliverydata) {
       
     }
    
-    meconomy[bowlerName].economy=eBowler[bowlerName].run/eBowler[bowlerName].ball;
-  // result.push[meconomy[bowlerName].economy];
+     meconomy[bowlerName]=eBowler[bowlerName].run/eBowler[bowlerName].ball;
+  
+    
   }
-
-  return meconomy;
-  }
+  let vals=Object.entries(meconomy).sort((a,b)=> a[1]-b[1]);
+for(let i =0;i<10;i++){
+  result.push(vals[i]);
+}
+  return result;
+ 
+ }
 module.exports = {
   matches: matches,
   matcheswonPerTeamPerYear: matchesWon,
