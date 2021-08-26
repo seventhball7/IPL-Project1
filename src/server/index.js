@@ -22,10 +22,11 @@ csvtojson()
             JSON.stringify(result, null, 2),
             (error) => {
               if (error) throw error;
+              console.log("result 1 executed");
             }
           );
         };
-        // matchesPlayedPeryear();
+        matchesPlayedPeryear();
         let matchesWonPerTeam = () => {
           let result = ipl.matcheswonPerTeamPerYear(jsnArray1);
           fs.writeFile(
@@ -33,10 +34,11 @@ csvtojson()
             JSON.stringify(result, null, 2),
             (error) => {
               if (error) throw error;
+              console.log("result 2 executed");
             }
           );
         };
-        // matchesWonPerTeam();
+        matchesWonPerTeam();
         let extraRunConceded = () => {
           let result = ipl.extraRunsGiven(jsnArray1, jsnArray2);
           fs.writeFile(
@@ -44,21 +46,23 @@ csvtojson()
             JSON.stringify(result, null, 2),
             (error) => {
               if (error) throw error;
+              console.log("result 3 executed");
             }
           );
         };
-        //extraRunConceded();
-        
-        let economicalBowlersofIPL=()=>{
-          let result = ipl.economicalBowlers(jsnArray2);
+
+        extraRunConceded();
+        let economicalBowlersofIPL = () => {
+          let result = ipl.economicalBowlers(jsnArray1, jsnArray2);
           fs.writeFile(
             "../public/output/economyBowler.json",
             JSON.stringify(result, null, 2),
             (error) => {
               if (error) throw error;
+              console.log("result 4 executed");
             }
           );
-        }
-        // economicalBowlersofIPL();
+        };
+        economicalBowlersofIPL();
       });
   });
