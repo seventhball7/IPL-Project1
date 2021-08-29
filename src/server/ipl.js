@@ -41,17 +41,23 @@ function matchesWon(matchdata) {
 
 function extraRuns(matchdata, deliverydata) {
   let teams = {};
-  let id = matchdata.filter((passedArgument) => {
-    if (passedArgument.season == 2016) return passedArgument.id;
-  });
+  let id = matchdata
+    .filter((passedArgument) => {
+      if (passedArgument.season == 2016) return passedArgument.id;
+    })
+    .map((value) => {
+      return value.id;
+    });
   deliverydata.forEach((value) => {
     let matchid = value.match_id;
-    if (matchid in id) {
-      let bteam = value.bowling_team;
-      if (bteam in teams) {
-        teams[bteam] += parseInt(value.extra_runs);
-      } else {
-        teams[bteam] = parseInt(value.extra_runs);
+    for (let i = 0; i < id.length; i += 1) {
+      if (matchid == id[i]) {
+        let bteam = value.bowling_team;
+        if (bteam in teams) {
+          teams[bteam] += parseInt(value.extra_runs);
+        } else {
+          teams[bteam] = parseInt(value.extra_runs);
+        }
       }
     }
   });
@@ -71,19 +77,22 @@ function economicalBowlers(matchdata, deliverydata) {
   });
   deliverydata.forEach((value) => {
     let matchid = value.match_id;
-    if (matchid in mData) {
-      bowlerName = value.bowler;
-      if (eBowler[bowlerName] == undefined) {
-        eBowler[bowlerName] = {};
-        meconomy[bowlerName] = {};
-        eBowler[bowlerName].ball = parseInt(value.ball);
-        eBowler[bowlerName].run = parseInt(value.total_runs);
-      } else {
-        eBowler[bowlerName].ball += parseInt(value.ball);
+    for (let i = 0; i < mData.length; i++) {
+      if (matchid == mData[i].id) {
+        bowlerName = value.bowler;
+        if (eBowler[bowlerName] == undefined) {
+          eBowler[bowlerName] = {};
+          meconomy[bowlerName] = {};
+          eBowler[bowlerName].ball = parseInt(value.ball);
+          eBowler[bowlerName].run = parseInt(value.total_runs);
+        } else {
+          eBowler[bowlerName].ball += parseInt(value.ball);
 
-        eBowler[bowlerName].run += parseInt(value.total_runs);
+          eBowler[bowlerName].run += parseInt(value.total_runs);
+        }
+        meconomy[bowlerName] =
+          eBowler[bowlerName].run / eBowler[bowlerName].ball;
       }
-      meconomy[bowlerName] = eBowler[bowlerName].run / eBowler[bowlerName].ball;
     }
   });
 
