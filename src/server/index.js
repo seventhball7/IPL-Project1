@@ -15,7 +15,7 @@ csvtojson()
         let result1 = ipl.matches(jsn1);
         fs.writeFile(
           "../public/output/matchesPerYear.json",
-          JSON.stringify(result1, null, 2),
+          JSON.stringify(result1,null, 2),
           (error) => {
             if (error) throw error;
             console.log("result 1 saved");

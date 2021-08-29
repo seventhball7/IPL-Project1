@@ -1,73 +1,67 @@
-function matches(matchdata) {                                                                         //1
+function matches(matchdata) {
+  //1
   const teamMatches = {};
   for (let i in matchdata) {
     let year = matchdata[i].season;
-    if (year in teamMatches) {
-      teamMatches[year] += 1;
-    } else {
-      teamMatches[year] = 1;
-    }
+    teamMatches[year] = teamMatches[year] + 1 || 1;
   }
   return teamMatches;
 }
 
-function matchesWon(matchdata) {                                                                       //2
+function matchesWon(matchdata) {
+  //2
   let matchesWon = {};
-  let perTeamWon = {};
   for (let i in matchdata) {
     let year = matchdata[i].season;
     let win = matchdata[i].winner;
-    if (year in matchesWon) {
-      if (win in perTeamWon) {
-        perTeamWon[win] += 1;
-      } else {
-        perTeamWon[win] = 1;
-      }
-      matchesWon[year] = perTeamWon;
-    } else {
-      perTeamWon = {};
-      matchesWon[year] = perTeamWon;
-    }
+    if (year in matchesWon)
+      matchesWon[year][win] = matchesWon[year][win] + 1 || 1;
+    else matchesWon[year] = {};
   }
   return matchesWon;
 }
 
-function extraRuns(matchdata, deliverydata) {                                                           //3 
-  let year = {};
+function extraRuns(matchdata, deliverydata) {
+  //3
   let teams = {};
+  let id=[];
   for (let i in matchdata) {
-    let id = {};
     if (matchdata[i].season == 2016) {
-      id = matchdata[i].id;
-    }
-    for (let k in deliverydata) {
-      let matchid = deliverydata[k].match_id;
-      if (id == matchid) {
-        let bteam = deliverydata[k].bowling_team;
-        if (bteam in teams) {
-          teams[bteam] += parseInt(deliverydata[k].extra_runs);
-        } else {
-          teams[bteam] = parseInt(deliverydata[k].extra_runs);
-        }
-      }
+      id.push(matchdata[i].id);
     }
   }
-  return teams;
+    for (let k in deliverydata) {
+      for(let i =0;i<id.length;i+=1){
+        if (deliverydata[k].match_id ==id[i]) {
+          let bteam = deliverydata[k].bowling_team;
+          if (bteam in teams) {
+            teams[bteam] += parseInt(deliverydata[k].extra_runs);
+          } else {
+            teams[bteam] = parseInt(deliverydata[k].extra_runs);
+          }
+        }
+      }
+      
+    }
+  
+   return teams;
 }
 
-function economicalBowlers(matchdata, deliverydata) {                                                       //4
-  let eBowler = {};
+function economicalBowlers(matchdata, deliverydata) {
+  //4
+  let eBowler={}
   let meconomy = {};
   let bowlerName;
   let result = {};
+  let id=[];
   for (let k in matchdata) {
-    let id = {};
     if (matchdata[k].season == 2015) {
-      id = matchdata[k].id;
+      id.push(matchdata[k].id);
     }
+  }
     for (let i in deliverydata) {
-      let matchid = deliverydata[i].match_id;
-      if (id == matchid) {
+      for(let k=0;k<id.length;k+=1){
+        if (id[k] == deliverydata[i].match_id) {
         bowlerName = deliverydata[i].bowler;
         if (eBowler[bowlerName] == undefined) {
           eBowler[bowlerName] = {};
@@ -82,9 +76,10 @@ function economicalBowlers(matchdata, deliverydata) {                           
         meconomy[bowlerName] =
           eBowler[bowlerName].run / eBowler[bowlerName].ball;
       }
+      }
     }
-  }
-  let vals = Object.entries(meconomy).sort((a, b) => a[1] - b[1]);
+  
+  let vals = Object.entries(meconomy).sort((a, b) => a[1] - b[1]); //converting meconomy to array then sorting 
 
   for (let i = 0; i < 10; i++) {
     let bowler = vals[i][0];
@@ -94,7 +89,7 @@ function economicalBowlers(matchdata, deliverydata) {                           
   return result;
 }
 module.exports = {
-  matches: matches,
+  matches,
   matcheswonPerTeamPerYear: matchesWon,
   extraRunsGiven: extraRuns,
   economicalBowlers: economicalBowlers,
