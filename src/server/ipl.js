@@ -24,44 +24,43 @@ function matchesWon(matchdata) {
 function extraRuns(matchdata, deliverydata) {
   //3
   let teams = {};
-  let id=[];
+  let id = [];
   for (let i in matchdata) {
     if (matchdata[i].season == 2016) {
       id.push(matchdata[i].id);
     }
   }
-    for (let k in deliverydata) {
-      for(let i =0;i<id.length;i+=1){
-        if (deliverydata[k].match_id ==id[i]) {
-          let bteam = deliverydata[k].bowling_team;
-          if (bteam in teams) {
-            teams[bteam] += parseInt(deliverydata[k].extra_runs);
-          } else {
-            teams[bteam] = parseInt(deliverydata[k].extra_runs);
-          }
+  for (let k in deliverydata) {
+    for (let i = 0; i < id.length; i += 1) {
+      if (deliverydata[k].match_id == id[i]) {
+        let bteam = deliverydata[k].bowling_team;
+        if (bteam in teams) {
+          teams[bteam] += parseInt(deliverydata[k].extra_runs);
+        } else {
+          teams[bteam] = parseInt(deliverydata[k].extra_runs);
         }
       }
-      
     }
-  
-   return teams;
+  }
+
+  return teams;
 }
 
 function economicalBowlers(matchdata, deliverydata) {
   //4
-  let eBowler={}
+  let eBowler = {};
   let meconomy = {};
   let bowlerName;
   let result = {};
-  let id=[];
+  let id = [];
   for (let k in matchdata) {
     if (matchdata[k].season == 2015) {
       id.push(matchdata[k].id);
     }
   }
-    for (let i in deliverydata) {
-      for(let k=0;k<id.length;k+=1){
-        if (id[k] == deliverydata[i].match_id) {
+  for (let i in deliverydata) {
+    for (let k = 0; k < id.length; k += 1) {
+      if (id[k] == deliverydata[i].match_id) {
         bowlerName = deliverydata[i].bowler;
         if (eBowler[bowlerName] == undefined) {
           eBowler[bowlerName] = {};
@@ -76,10 +75,10 @@ function economicalBowlers(matchdata, deliverydata) {
         meconomy[bowlerName] =
           eBowler[bowlerName].run / eBowler[bowlerName].ball;
       }
-      }
     }
-  
-  let vals = Object.entries(meconomy).sort((a, b) => a[1] - b[1]); //converting meconomy to array then sorting 
+  }
+
+  let vals = Object.entries(meconomy).sort((a, b) => a[1] - b[1]); //converting meconomy to array then sorting
 
   for (let i = 0; i < 10; i++) {
     let bowler = vals[i][0];
