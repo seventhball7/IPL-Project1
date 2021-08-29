@@ -67,28 +67,24 @@ function extraRuns(matchdata, deliverydata) {
 // problem 4
 
 function economicalBowlers(matchdata, deliverydata) {
-  //4
   let eBowler = {};
-  let meconomy = {};
-  let bowlerName;
+  let meconomy={};
   let result = {};
   let mData = matchdata.filter((value) => {
     if (value.season == 2015) return value.id;
   });
   deliverydata.forEach((value) => {
-    let matchid = value.match_id;
     for (let i = 0; i < mData.length; i++) {
-      if (matchid == mData[i].id) {
-        bowlerName = value.bowler;
-        if (eBowler[bowlerName] == undefined) {
-          eBowler[bowlerName] = {};
-          meconomy[bowlerName] = {};
-          eBowler[bowlerName].ball = parseInt(value.ball);
-          eBowler[bowlerName].run = parseInt(value.total_runs);
-        } else {
+      if (value.match_id == mData[i].id) {
+       let bowlerName = value.bowler;
+        if (bowlerName in eBowler) {
           eBowler[bowlerName].ball += parseInt(value.ball);
-
           eBowler[bowlerName].run += parseInt(value.total_runs);
+        } else {
+          eBowler[bowlerName] = {};
+          eBowler[bowlerName].ball = parseInt(value.ball);
+
+          eBowler[bowlerName].run = parseInt(value.total_runs);
         }
         meconomy[bowlerName] =
           eBowler[bowlerName].run / eBowler[bowlerName].ball;
