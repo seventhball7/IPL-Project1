@@ -1,5 +1,13 @@
-## IPL-PROJECT
 
+ ## HighCharts Plotting
+  - Server used is the 'LiveServer' and is directly installed from Visual Studio Code or http-server is also used.
+  - Server is using the port number 5500 and can also be viewed in the port number 8080.
+  - localhost:5500 or localhost:8080
+  - navigate to src/public/output to see the plotting.
+  - The output is fetched in the output.js file and then it is formatted in the highCharts graph.
+  - The charts can be seen in the index.html file in the directory src/public/output.
+
+## IPL-PROJECT
 - Initialize the project folder with -> npm init -y, a package.json file would be created.
 - Install csvtojson parser.
 - Command to install is -> npm i csvtojson.
@@ -51,11 +59,6 @@
 
 - The average(economy) has been calculated by dividing the total number of runs given by the bowler by the total number of ball a bowler has bowled.
  
- ## HighCharts Plotting
-  - Server used is the 'LiveServer' and is directly installed from Visual Studio Code.
-  - Server is using the port number 5500.
-  - The output is fetched in the output.js file and then it is formatted in the highCharts graph.
-  - The charts can be seen in the index.html file in the directory src/public/output.
 
 
 
