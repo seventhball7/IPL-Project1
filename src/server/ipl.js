@@ -50,7 +50,6 @@ function economicalBowlers(matchdata, deliverydata) {
   //4
   let eBowler = {};
   let meconomy = {};
-  let bowlerName;
   let result = {};
   let id = [];
   for (let k in matchdata) {
@@ -61,10 +60,9 @@ function economicalBowlers(matchdata, deliverydata) {
   for (let i in deliverydata) {
     for (let k = 0; k < id.length; k += 1) {
       if (id[k] == deliverydata[i].match_id) {
-        bowlerName = deliverydata[i].bowler;
+        let bowlerName = deliverydata[i].bowler;
         if (eBowler[bowlerName] == undefined) {
           eBowler[bowlerName] = {};
-          meconomy[bowlerName] = {};
           eBowler[bowlerName].ball = parseInt(deliverydata[i].ball);
           eBowler[bowlerName].run = parseInt(deliverydata[i].total_runs);
         } else {
