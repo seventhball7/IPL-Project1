@@ -14,6 +14,9 @@ function matchesWon(matchdata) {
   for (let i in matchdata) {
     let year = matchdata[i].season;
     let win = matchdata[i].winner;
+    if (win.length==0){
+      win ='draw';
+    }
     if (year in matchesWon)
       matchesWon[year][win] = matchesWon[year][win] + 1 || 1;
     else matchesWon[year] = {};

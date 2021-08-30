@@ -46,10 +46,17 @@
 
         * cd src/server
         * node index.js
-### For problem 3 & 4
-
-- Since the variable used is searching in both the files deliveries.csv and matches.csv it will take few seconds to execute.
 
 ### For problem 4
 
 - The average(economy) has been calculated by dividing the total number of runs given by the bowler by the total number of ball a bowler has bowled.
+ 
+ ## HighCharts Plotting
+  - Server used is the 'LiveServer' and is directly installed from Visual Studio Code.
+  - Server is using the port number 5500.
+  - The output is fetched in the output.js file and then it is formatted in the highCharts graph.
+  - The charts can be seen in the index.html file in the directory src/public/output.
+
+
+
+  
