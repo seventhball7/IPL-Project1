@@ -12,11 +12,13 @@ csvtojson()
     csvtojson()
       .fromFile(deliveryPath)
       .then((jsnobj2) => {
+       
         let jsnArray1 = Object.values(jsn1);
+        console.log(jsn1)
         let jsnArray2 = Object.values(jsnobj2);
 
         let matchesPlayedPeryear = () => {
-          let result = ipl.matches(jsn1);
+          let result = ipl.matches(jsnArray1);
           fs.writeFile(
             "../public/output/matchesPerYear.json",
             JSON.stringify(result, null, 2),
