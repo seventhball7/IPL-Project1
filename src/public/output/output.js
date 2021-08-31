@@ -185,29 +185,24 @@ fetch("./matchesWonPerTeam.json")
   .then((response) => response.json())
   .then((data) => {
     let key = Object.keys(data);
+    let v = Object.values(data);
     let values = [];
     let allTeams = [];
-
-    for (let year in data) {
-      for (let team in data[year]) {
-        let find = allTeams.find((value) => {
-          return value == team;
-        });
-        if (find == undefined) {
-          allTeams.push(team);
+    console.log(v);
+    v.reduce(function (p, item) {
+      Object.keys(item).forEach(function (i) {
+        if (allTeams.indexOf(i) === -1) {
+          allTeams.push(i);
         }
-      }
-    }
-    // allTeams.sort();
-    console.log(allTeams);
-    for (let i of allTeams) {
+      });
+    });
+    for (let i = 0; i < allTeams.length; i++) {
       let newObject = {};
-      newObject.name = i;
+      newObject.name = allTeams[i];
       newObject.data = [];
       values.push(newObject);
     }
-    console.log(values);
-
+       
     // Filling the array
     for (let teamName of allTeams) {
       for (let year in data) {
@@ -218,7 +213,7 @@ fetch("./matchesWonPerTeam.json")
             }
           }
         } else {
-          let value = parseInt(data[year][teamName]);
+          let value = (data[year][teamName]);
           for (let i in values) {
             if (values[i].name == teamName) {
               values[i].data.push(value);
@@ -232,49 +227,35 @@ fetch("./matchesWonPerTeam.json")
   .then((newData) => {
     Highcharts.chart("matcheswon", {
       chart: {
-        type: "bar",
+        type: "column",
       },
       title: {
-        text: "Matches Won Per Year",
+        text: "Matches Won Per Team",
       },
       xAxis: {
         categories: newData.key,
-        title: {
-          text: "Year",
-        },
+        crosshair: true,
       },
       yAxis: {
         min: 0,
         title: {
-          text: "Number of matches",
-          align: "high",
-        },
-        labels: {
-          overflow: "justify",
+          text: "Matches Won",
         },
       },
-      tooltip: {},
+      tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat:
+          '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+          '<td style="padding:0"><b>{point.y}</b></td></tr>',
+        footerFormat: "</table>",
+        shared: true,
+        useHTML: true,
+      },
       plotOptions: {
-        bar: {
-          dataLabels: {
-            enabled: true,
-          },
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 0,
         },
-      },
-      legend: {
-        layout: "vertical",
-        align: "right",
-        verticalAlign: "top",
-        x: -40,
-        y: 80,
-        floating: true,
-        borderWidth: 1,
-        backgroundColor:
-          Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
-        shadow: true,
-      },
-      credits: {
-        enabled: false,
       },
       series: newData.values,
     });
