@@ -12,13 +12,8 @@ csvtojson()
     csvtojson()
       .fromFile(deliveryPath)
       .then((jsnobj2) => {
-       
-        let jsnArray1 = Object.values(jsn1);
-        console.log(jsn1)
-        let jsnArray2 = Object.values(jsnobj2);
-
         let matchesPlayedPeryear = () => {
-          let result = ipl.matches(jsnArray1);
+          let result = ipl.matches(jsn1);
           fs.writeFile(
             "../public/output/matchesPerYear.json",
             JSON.stringify(result, null, 2),
@@ -30,7 +25,7 @@ csvtojson()
         };
         matchesPlayedPeryear();
         let matchesWonPerTeam = () => {
-          let result = ipl.matcheswonPerTeamPerYear(jsnArray1);
+          let result = ipl.matcheswonPerTeamPerYear(jsn1);
           fs.writeFile(
             "../public/output/matchesWonPerTeam.json",
             JSON.stringify(result, null, 2),
@@ -42,7 +37,7 @@ csvtojson()
         };
         matchesWonPerTeam();
         let extraRunConceded = () => {
-          let result = ipl.extraRunsGiven(jsnArray1, jsnArray2);
+          let result = ipl.extraRunsGiven(jsn1, jsnobj2);
           fs.writeFile(
             "../public/output/extraRuns.json",
             JSON.stringify(result, null, 2),
@@ -55,7 +50,7 @@ csvtojson()
 
         extraRunConceded();
         let economicalBowlersofIPL = () => {
-          let result = ipl.economicalBowlers(jsnArray1, jsnArray2);
+          let result = ipl.economicalBowlers(jsn1, jsnobj2);
           fs.writeFile(
             "../public/output/economyBowler.json",
             JSON.stringify(result, null, 2),
