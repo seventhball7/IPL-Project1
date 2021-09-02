@@ -5,8 +5,8 @@ const deliveryPath = "../data/deliveries.csv";
 const matchesPerYear = (cb) => {
   csvtojson()
     .fromFile(matchPath)
-    .then((obj) => {
-      let val = obj
+    .then((matcheObject) => {
+      let value = matcheObject
         .map((row) => {
           return row.season;
         })
@@ -14,7 +14,7 @@ const matchesPerYear = (cb) => {
           acc[curr] = acc[curr] + 1 || 1;
           return acc;
         }, {});
-      cb(val);
+      cb(value);
       //return val;
     });
 };
@@ -23,22 +23,20 @@ const matchesPerYear = (cb) => {
 const matchesWonPerTeamPerYear = (cb) => {
   csvtojson()
     .fromFile(matchPath)
-    .then((obj) => {
-      let value = obj
+    .then((matchData) => {
+      let value = matchData
         .map((row) => {
           let season = row.season;
           let winner = row.winner;
           return { season, winner };
         })
-        .reduce((acc, curr) => {
-          let winner = curr.winner;
-          let season = curr.season;
+        .reduce((acc, currentValue) => {
+          let winner = currentValue.winner;
+          let season = currentValue.season;
           if (season in acc) {
-            if (winner in acc[season]) {
-              acc[season][winner] += 1;
-            } else {
-              acc[season][winner] = 1;
-            }
+            winner in acc[season]
+              ? (acc[season][winner] += 1)
+              : (acc[season][winner] = 1);
           } else {
             acc[season] = {};
             acc[season][winner] = 1;
@@ -46,7 +44,7 @@ const matchesWonPerTeamPerYear = (cb) => {
           return acc;
         }, {});
       cb(value);
-      return value;
+      //return value;
     });
 };
 
@@ -54,13 +52,13 @@ const matchesWonPerTeamPerYear = (cb) => {
 const extraRunsin2016 = (cb) => {
   csvtojson()
     .fromFile(matchPath)
-    .then((jsnobj1) => {
-      return jsnobj1;
+    .then((matchData) => {
+      return matchData;
     })
     .then((jsn1) => {
       csvtojson()
         .fromFile(deliveryPath)
-        .then((jsnobj2) => {
+        .then((deliveryData) => {
           let result = {};
           let id = jsn1
             .filter((data) => {
@@ -69,16 +67,14 @@ const extraRunsin2016 = (cb) => {
             .map((element) => {
               return element.id;
             });
-          jsnobj2.map((element) => {
+          deliveryData.map((element) => {
             let find = id.find((value) => {
               return element.match_id == value;
             });
             if (find != undefined) {
-              if (result[element.bowling_team] != undefined) {
-                result[element.bowling_team] += parseInt(element.extra_runs);
-              } else {
-                result[element.bowling_team] = parseInt(element.extra_runs);
-              }
+              result[element.bowling_team] != undefined
+                ? (result[element.bowling_team] += parseInt(element.extra_runs))
+                : (result[element.bowling_team] = parseInt(element.extra_runs));
             }
           });
           cb(result);
@@ -96,8 +92,8 @@ const economyBowlerin2015 = (cb) => {
       csvtojson()
         .fromFile(deliveryPath)
         .then((jsnobj2) => {
-          let eBowler = {};
-          let meconomy = {};
+          let economyBowler = {};
+          let mostEconomyBowler = {};
           let result = {};
           let id = jsn1
             .filter((data) => {
@@ -107,27 +103,27 @@ const economyBowlerin2015 = (cb) => {
               return data.id;
             });
           jsnobj2.map((data) => {
-            let find = id.find((value) => {
+            let sameMatchId = id.find((value) => {
               return data.match_id == value;
             });
-            if (find != undefined) {
+            if (sameMatchId != undefined) {
               let bowlerName = data.bowler;
-              if (bowlerName in eBowler) {
-                eBowler[bowlerName].ball += parseInt(data.ball);
-                eBowler[bowlerName].run += parseInt(data.total_runs);
-              } else {
-                eBowler[bowlerName] = {};
-                eBowler[bowlerName].ball = parseInt(data.ball);
+              bowlerName in economyBowler
+                ? ((economyBowler[bowlerName].ball += parseInt(data.ball)),
+                  (economyBowler[bowlerName].run += parseInt(data.total_runs)))
+                : ((economyBowler[bowlerName] = {}),
+                  (economyBowler[bowlerName].ball = parseInt(data.ball)),
+                  (economyBowler[bowlerName].run = parseInt(data.total_runs)));
 
-                eBowler[bowlerName].run = parseInt(data.total_runs);
-              }
-              meconomy[bowlerName] =
-                eBowler[bowlerName].run / eBowler[bowlerName].ball;
+              mostEconomyBowler[bowlerName] =
+                economyBowler[bowlerName].run / economyBowler[bowlerName].ball;
             }
           });
-          let vals = Object.entries(meconomy).sort((a, b) => a[1] - b[1]);
-          vals = vals.filter((vals, idx) => idx < 10);
-          result = Object.fromEntries(vals);
+          let values = Object.entries(mostEconomyBowler).sort(
+            (a, b) => a[1] - b[1]
+          );
+          values = values.filter((vals, idx) => idx < 10);
+          result = Object.fromEntries(values);
           cb(result);
           //  return result;
         });
