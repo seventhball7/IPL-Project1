@@ -1,65 +1,47 @@
 const csvtojson = require("csvtojson");
+const FileSystem = require("fs");
+const Ipl = require("./ipl.js");
+
 const matchPath = "../data/matches.csv";
 const deliveryPath = "../data/deliveries.csv";
-const fs = require("fs");
-const ipl = require("./ipl.js");
+
 csvtojson()
   .fromFile(matchPath)
-  .then((jsnobj1) => {
-    return jsnobj1;
+  .then((matchesDataParsed) => {
+    return matchesDataParsed;
   })
-  .then((jsn1) => {
+  .then((matchesData) => {
     csvtojson()
       .fromFile(deliveryPath)
-      .then((jsnobj2) => {
+      .then((deliveryData) => {
         let matchesPlayedPeryear = () => {
-          let result = ipl.matches(jsn1);
-          fs.writeFile(
-            "../public/output/matchesPerYear.json",
-            JSON.stringify(result, null, 2),
-            (error) => {
-              if (error) throw error;
-              console.log("result 1 executed");
-            }
-          );
+          let result = Ipl.matches(matchesData);
+          savetoFile("../public/output/matchesPerYear.json", result);
         };
         matchesPlayedPeryear();
         let matchesWonPerTeam = () => {
-          let result = ipl.matcheswonPerTeamPerYear(jsn1);
-          fs.writeFile(
-            "../public/output/matchesWonPerTeam.json",
-            JSON.stringify(result, null, 2),
-            (error) => {
-              if (error) throw error;
-              console.log("result 2 executed");
-            }
-          );
+          let result = Ipl.matcheswonPerTeamPerYear(matchesData);
+          savetoFile("../public/output/matchesWonPerTeam.json", result);
         };
         matchesWonPerTeam();
         let extraRunConceded = () => {
-          let result = ipl.extraRunsGiven(jsn1, jsnobj2);
-          fs.writeFile(
-            "../public/output/extraRuns.json",
-            JSON.stringify(result, null, 2),
-            (error) => {
-              if (error) throw error;
-              console.log("result 3 executed");
-            }
-          );
+          let result = Ipl.extraRunsGiven(matchesData, deliveryData);
+          savetoFile("../public/output/extraRuns.json", result);
         };
 
         extraRunConceded();
         let economicalBowlersofIPL = () => {
-          let result = ipl.economicalBowlers(jsn1, jsnobj2);
-          fs.writeFile(
-            "../public/output/economyBowler.json",
-            JSON.stringify(result, null, 2),
-            (error) => {
-              if (error) throw error;
-              console.log("result 4 executed");
-            }
-          );
+          let result = Ipl.economicalBowlers(matchesData, deliveryData);
+          savetoFile("../public/output/economyBowler.json", result);
         };
         economicalBowlersofIPL();
       });
   });
+
+function savetoFile(location, data) {
+  FileSystem.writeFile(location, JSON.stringify(data, null, 2), (error) => {
+    if (error) throw error;
+    let a=1;
+    console.log("executed");
+  });
+}
